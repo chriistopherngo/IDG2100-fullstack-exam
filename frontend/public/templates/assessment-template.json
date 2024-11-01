@@ -1,0 +1,23 @@
+{
+    "cards": [
+      {
+        "card-id": , // number in the bottom right corner of the card
+        "card-type": "assessment", // should not be changed
+        "card-category": "", // can be one of the following: "who is assessed", "the assessor", "assessment artefact", "assessment format", "context", "assessment timing"
+        "card-name": "",
+        "card-description": "",
+        "card-details": ""
+      },
+      {
+        "card-id": ,
+        "card-type": "assessment",
+        "card-category": "",
+        "card-name": "",
+        "card-description": "",
+        "card-details": ""
+      }
+      ... // replace ellipsis with however many new cards you want, each card is separated by a comma
+
+      // comments (// followed by text) have to be removed after filling in the cards
+    ]
+  }

@@ -1,0 +1,30 @@
+.loading-spinner {
+    z-index: 1000;
+    background-color: rgba(234, 234, 234, 0.5);
+    position: fixed;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5em;
+}
+
+.loading-text {
+    font-size: 2vw;
+    font-weight: 600;
+    color: #000;
+}
+
+.loading-spinner img {
+    width: 15vw;
+}
+
+@media screen and (max-width: 700px){
+    
+    
+.loading-spinner img {
+    width: 25vw;
+}
+}

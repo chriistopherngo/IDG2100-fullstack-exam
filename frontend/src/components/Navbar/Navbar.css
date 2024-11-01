@@ -1,0 +1,133 @@
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 0 20px;
+  }
+  
+  nav a {
+    all: unset;
+    text-decoration: none;
+    padding: 8px 16px;
+  }
+  
+  nav a:hover {
+    cursor: pointer;
+    background-color: lightgray;
+    border-radius: 4px;
+  }
+  
+  nav li {
+    list-style: none;
+  }
+  
+  nav .logout:hover {
+    border: solid 1px rgb(220, 49, 49);
+    background-color: transparent;
+    padding: 7px 15px;
+  }
+  
+  nav .logo ul {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  
+  nav .logo img {
+    width: 50px;
+    height: 50px;
+  }
+  
+  
+  nav .links ul {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  
+  .links ul li a.active {
+    background-color: lightgray;
+    color: black;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .menu-icon {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+  }
+  
+  .bar {
+    width: 25px;
+    height: 3px;
+    background-color: black;
+    margin: 3px 0;
+    transition: transform 0.3s ease;
+  }
+  
+  .menu-icon.open .bar:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+  
+  .menu-icon.open .bar:nth-child(2) {
+    opacity: 0;
+  }
+  
+  .menu-icon.open .bar:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+  
+.signupNav{
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 8px 0;
+}
+
+.signupNav:hover{
+  background: none;
+}
+
+  @media screen and (max-width: 1111px) {
+    nav .logo ul {
+      gap: 5px;
+    }
+  
+    nav .logo img {
+      width: 40px;
+      height: 40px;
+    }
+  
+    nav .links ul {
+      display: none;
+      flex-direction: column;
+      position: absolute;
+      top: 70px;
+      left: 0;
+      background-color: rgb(240, 240, 240);
+      width: 100%;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 10px 0;
+      z-index: 100;
+      height: 100%;
+    }
+  
+    .menu-icon {
+      display: flex;
+    }
+  
+    .links.open ul {
+      display: flex;
+      align-items: flex-end;
+      gap: 18px;
+    }
+  
+    nav .links ul li {
+      margin: 0 20px;
+    }
+  }
+  

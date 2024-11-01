@@ -1,0 +1,1 @@
+The included JSON files show the format data should have when using the bulk-add endpoint

@@ -1,0 +1,1556 @@
+openapi: 3.0.0
+info:
+  title: SUPER Assessor Card Game API
+  version: 1.0.0
+  description: API for doing performing CRUD operations on cards and users of the SUPER Assessor Card Game
+servers:
+  - url: http://localhost:5353/api
+    description: Local development server
+tags:
+  - name: Auth
+    description: Authentication routes
+  - name: Assessment
+    description: Assessment card routes
+  - name: Mission
+    description: Mission card routes
+  - name: User
+    description: User routes
+  - name: Search
+    description: Search routes
+  - name: Bulk
+    description: Bulk card management routes
+  - name: Scheme
+    description: Scheme management routes
+paths:
+  # Auth
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      description: Register as a new user
+      requestBody:
+        description: User data
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fName:
+                  type: string
+                lName:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                university:
+                  type: string
+                department:
+                  type: string
+                position:
+                  type: string
+                role:
+                  type: string
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+        409:
+          description: Email already exists
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      description: Log in with a registered user
+      requestBody:
+        description: User data
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        200:
+          description: Returns an initial JWT access token, as well as an HTTP only cookie containing a refresh token
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjMzNjc4MjhiMzc0YzljNmQ2MDgxMjIiLCJpYXQiOjE3MTQ2NDk2NDUsImV4cCI6MTcxNTI1NDQ0NX0.JiWh_wWrkq4OUheAq-L4sxdJqyoOFJ6gIm-1grxCamk; Path=/; HttpOnly; Expires=Thu, 09 May 2024 11:34:05 GMT;
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjMzNjc4MjhiMzc0YzljNmQ2MDgxMjIiLCJyb2xlIjoiQWRtaW5pc3RyYXRvciIsImlhdCI6MTcxNDY0OTY0NSwiZXhwIjoxNzE0NjUwNTQ1fQ.zHKfm_Rz65hYcGGfYjRJA31zUSu012BQA8CxhAoTDQU
+        400:
+          description: Bad Request
+        401:
+          description: Invalid password
+        404:
+          description: Email could not be found in database
+  /auth/refresh:
+    get:
+      tags:
+        - Auth
+      description: Get a new access token using your refresh token cookie
+      security:
+        - refreshToken: []
+      responses:
+        200:
+          description: Return a JWT access token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjMzNjc4MjhiMzc0YzljNmQ2MDgxMjIiLCJyb2xlIjoiQWRtaW5pc3RyYXRvciIsImlhdCI6MTcxNDY0OTY0NSwiZXhwIjoxNzE0NjUwNTQ1fQ.zHKfm_Rz65hYcGGfYjRJA31zUSu012BQA8CxhAoTDQU
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+  /auth/logout:
+    get:
+      tags:
+        - Auth
+      description: Log out from the application, deletes refreshToken cookie
+      responses:
+        200:
+          description: OK
+  # Assessment
+  /assessment:
+    get:
+      tags:
+        - Assessment
+      description: Gets a list of all assessment cards stored in the database
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                example:
+                  cards:
+                    - card_id: 1
+                      card_type: assessment
+                      card_category: who is assessed
+                      card_name: Student
+                      card_description: A student is assessed individually
+                      card_details: The student will be assessed either on an independent work or on their contribution in a group assignment.
+                      card_icon: /public/icons/icon-assessed.png
+                    - card_id: 3
+                      card_type: assessment
+                      card_category: who is assessed
+                      card_name: Student group
+                      card_description: Three or more students work together on an assignment or project.
+                      card_details: Students can be grouped by own choice, by chance, or by teacher based on their skills and personal characteristics
+                      card_icon: /public/icons/icon-assessed.png
+                    - card_id: 10
+                      card_type: assessment
+                      card_category: the assessor
+                      card_name: Representative from public sector
+                      card_description: Whose field of expertise or project is relevant for the course.
+                      card_details: Can assess the students’ work with the work life appliance in mind. Can use criteria made by the teacher.
+                      card_icon: /public/icons/icon-assessor.png
+                    - card_id: 12
+                      card_type: assessment
+                      card_category: the assessor
+                      card_name: Student group
+                      card_description: Assess their own work or another group's work.
+                      card_details: The students get practice in how to evaluate other's work. Use clear assessment criteria made by the teacher.
+                      card_icon: /public/icons/icon-assessor.png
+                items:
+                  $ref: "#/components/schemas/AssessmentCard"
+        400:
+          description: Bad Request
+        404:
+          description: No Cards found
+    post:
+      tags:
+        - Assessment
+      description: Create a new assessment card
+      security:
+        - accessToken: []
+      requestBody:
+        description: Assessment card data
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              properties:
+                card_id:
+                  type: number
+                card_type:
+                  type: string
+                card_category:
+                  type: string
+                card_name:
+                  type: string
+                card_description:
+                  type: string
+                card_details:
+                  type: string
+                card_icon:
+                  type: string
+              items:
+                $ref: "#/components/schemas/AssessmentCard"
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+  /assessment/{card_id}:
+    get:
+      tags:
+        - Assessment
+      description: Finds a specific assessment card
+      parameters:
+        - in: path
+          name: card_id
+          schema:
+            type: number
+          required: true
+          description: card_id
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                example:
+                  card_id: 1
+                  card_type: assessment
+                  card_category: who is assessed
+                  card_name: Student
+                  card_description: A student is assessed individually
+                  card_details: The student will be assessed either on an independent work or on their contribution in a group assignment.
+                  card_icon: /public/icons/icon-assessed.png
+                items:
+                  $ref: "#/components/schemas/AssessmentCard"
+        400:
+          description: Bad Request
+        404:
+          description: Card not found
+    put:
+      tags:
+        - Assessment
+      description: Update an assessment card
+      security:
+        - accessToken: []
+      parameters:
+        - in: path
+          name: card_id
+          schema:
+            type: number
+          required: true
+          description: card_id
+      requestBody:
+        description: Possible fields to update
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              properties:
+                card_id:
+                  type: number
+                card_type:
+                  type: string
+                card_category:
+                  type: string
+                card_name:
+                  type: string
+                card_description:
+                  type: string
+                card_details:
+                  type: string
+                card_icon:
+                  type: string
+              items:
+                $ref: "#/components/schemas/AssessmentCard"
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+    delete:
+      tags:
+        - Assessment
+      description: Delete an assessment card
+      security:
+        - accessToken: []
+      parameters:
+        - in: path
+          name: card_id
+          schema:
+            type: number
+          required: true
+          description: card_id
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+  # Mission
+  /mission:
+    get:
+      tags:
+        - Mission
+      description: Gets a list of all mission cards stored in the database
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                example:
+                  cards:
+                    - card_id: 1
+                      card_type: mission
+                      card_name: Innovation
+                      card_description: Your mission is To find and support new and innovative ways of assessing students.
+                      card_icon: /public/icons/icon-mission-1.png
+                    - card_id: 3
+                      card_type: mission
+                      card_name: Learning
+                      card_description: Your mission is To focus on the students learning outcomes.
+                      card_icon: /public/icons/icon-mission-3.png
+                    - card_id: 4
+                      card_type: mission
+                      card_name: Student engagement
+                      card_description: Your mission is To prioritize and support ideas and ways that facilitate student engagement.
+                      card_icon: /public/icons/icon-mission-4.png
+                    - card_id: 6
+                      card_type: mission
+                      card_name: Cost cutting
+                      card_description: Your mission is To save resources and reduce financial expenses.
+                      card_icon: /public/icons/icon-mission-6.png
+                items:
+                  $ref: "#/components/schemas/MissionCard"
+        400:
+          description: Bad Request
+        404:
+          description: No Cards found
+    post:
+      tags:
+        - Mission
+      description: Create a new mission card
+      security:
+        - accessToken: []
+      requestBody:
+        description: Mission card data
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              properties:
+                card_id:
+                  type: number
+                card_type:
+                  type: string
+                card_name:
+                  type: string
+                card_description:
+                  type: string
+                card_icon:
+                  type: string
+              items:
+                $ref: "#/components/schemas/MissionCard"
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+  /mission/{card_id}:
+    get:
+      tags:
+        - Mission
+      description: Finds a specific mission card
+      parameters:
+        - in: path
+          name: card_id
+          schema:
+            type: number
+          required: true
+          description: card_id
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                example:
+                  card_id: 1
+                  card_type: mission
+                  card_name: Innovation
+                  card_description: Your mission is To find and support new and innovative ways of assessing students.
+                  card_icon: /public/icons/icon-mission-1.png
+                items:
+                  $ref: "#/components/schemas/MissionCard"
+        400:
+          description: Bad Request
+        404:
+          description: Card not found
+    put:
+      tags:
+        - Mission
+      description: Update a mission card
+      security:
+        - accessToken: []
+      parameters:
+        - in: path
+          name: card_id
+          schema:
+            type: number
+          required: true
+          description: card_id
+      requestBody:
+        description: Possible fields to update
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              properties:
+                card_id:
+                  type: number
+                card_type:
+                  type: string
+                card_name:
+                  type: string
+                card_description:
+                  type: string
+                card_icon:
+                  type: string
+              items:
+                $ref: "#/components/schemas/MissionCard"
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+    delete:
+      tags:
+        - Mission
+      description: Delete a mission card
+      security:
+        - accessToken: []
+      parameters:
+        - in: path
+          name: card_id
+          schema:
+            type: number
+          required: true
+          description: card_id
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+  # Users
+  /user:
+    get:
+      tags:
+        - User
+      description: Gets a list of all users stored in the database
+      security:
+        - accessToken: []
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                example:
+                  users:
+                    - fName: Andreas
+                      lName: Christiansen
+                      email: aaaa@aaaa.aa
+                      password: $2a$10$dA2z3xi5x0VtsuBzDFeTKOn/eaqUk1RlXhNG4oRh68X27rhBhEiVy
+                      university: NTNU
+                      department: Design
+                      position: Student
+                      role: Administrator
+                    - fName: Christopher
+                      lName: Ngo
+                      email: chrisng@stud.ntnu.no
+                      password: $2a$10$2Zq0f8UN3g.0/d5HY.ewoOOpdx56zEF99YpeqYLOkyppARARxQBnq
+                      university: NTNU
+                      department: Design
+                      position: Student
+                      role: Administrator
+                    - fName: Ola Nikolai
+                      lName: Skjeret
+                      email: olansk@stud.ntnu.no
+                      password: $2a$10$j1d.SN3iqGqET2AzRVKlq.pa8vcO84pofKOqVMDiu/ga/42cq4BRe
+                      university: NTNU
+                      department: Design
+                      position: Student
+                      role: User
+                    - fName: Average
+                      lName: User
+                      email: avg@user
+                      password: $2a$10$dbcVRZuWoM58uU/z6GmLh.o4c4ctuK2LH4HUbYcMra5DUepJRak2.
+                      university: uu
+                      department: Dep
+                      position: TA
+                      role: User
+                items:
+                  $ref: "#/components/schemas/User"
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+        404:
+          description: No users found
+    post:
+      tags:
+        - User
+      description: Create a new user
+      security:
+        - accessToken: []
+      requestBody:
+        description: User data
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              properties:
+                fName:
+                  type: string
+                lName:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                university:
+                  type: string
+                department:
+                  type: string
+                position:
+                  type: string
+                role:
+                  type: string
+              items:
+                $ref: "#/components/schemas/User"
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+        409:
+          description: This email is already taken.
+  /user/teachers:
+    get:
+      tags:
+        - User
+      description: Finds the number of teachers stored in the database
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                example:
+                  - _id: 661015bd18649a578d350f2a
+                    position: Teacher
+                  - _id: 662a8c7e1f6e48081de40db4
+                    position: Teacher
+                  - _id: 662e5d163649631520a038db
+                    position: Teacher
+                  - _id: 663b87359901fcf75682507e
+                    position: Teacher
+                items:
+                  $ref: "#/components/schemas/User"
+        400:
+          description: Bad Request
+        404:
+          description: No teachers found
+  /user/teachers/{email}:
+    get:
+      tags:
+        - User
+      description: Finds a specific teacher's ObjectId by their email
+      security:
+        - accessToken: []
+      parameters:
+        - in: path
+          name: email
+          schema:
+            type: string
+          required: true
+          description: The teacher's email
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                example:
+                  - _id: 661015bd18649a578d350f2a
+                    position: Teacher
+                  - _id: 662a8c7e1f6e48081de40db4
+                    position: Teacher
+                  - _id: 662e5d163649631520a038db
+                    position: Teacher
+                  - _id: 663b87359901fcf75682507e
+                    position: Teacher
+                items:
+                  $ref: "#/components/schemas/User"
+        400:
+          description: Bad Request
+        404:
+          description: No teachers found
+  /user/{mongoId}:
+    get:
+      tags:
+        - User
+      description: Finds a specific user
+      security:
+        - accessToken: []
+      parameters:
+        - in: path
+          name: mongoId
+          schema:
+            type: string
+          required: true
+          description: MongoDB ObjectId
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                example:
+                  fName: Andreas
+                  lName: Christiansen
+                  email: aaaa@aaaa.aa
+                  password: $2a$10$dA2z3xi5x0VtsuBzDFeTKOn/eaqUk1RlXhNG4oRh68X27rhBhEiVy
+                  university: NTNU
+                  department: Design
+                  position: Student
+                  role: Administrator
+                items:
+                  $ref: "#/components/schemas/User"
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+        404:
+          description: Card not found
+    put:
+      tags:
+        - User
+      description: Update a user as administrator
+      security:
+        - accessToken: []
+      parameters:
+        - in: path
+          name: mongoId
+          schema:
+            type: string
+          required: true
+          description: MongoDB ObjectId
+      requestBody:
+        description: Possible fields to update
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              properties:
+                position:
+                  type: string
+                role:
+                  type: string
+              example:
+                position: Teacher
+                role: Administrator
+              items:
+                $ref: "#/components/schemas/User"
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+    delete:
+      tags:
+        - User
+      description: Delete a user
+      security:
+        - accessToken: []
+      parameters:
+        - in: path
+          name: mongoId
+          schema:
+            type: string
+          required: true
+          description: MongoDB ObjectId
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+  /user/update/{mongoId}:
+    put:
+      tags:
+        - User
+      description: Update a user
+      security:
+        - accessToken: []
+      parameters:
+        - in: path
+          name: mongoId
+          schema:
+            type: string
+          required: true
+          description: MongoDB ObjectId
+      requestBody:
+        description: Possible fields to update
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              properties:
+                fName:
+                  type: string
+                lName:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                university:
+                  type: string
+                department:
+                  type: string
+              example:
+                fName: Example
+                lName: User
+                email: example@user.com
+                password: o8Bb76bf752
+                university: NTNU
+                department: Design
+              items:
+                $ref: "#/components/schemas/User"
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+  /user/bookmark/{mongoId}:
+    put:
+      tags:
+        - User
+      description: Bookmarks a scheme
+      security:
+        - accessToken: []
+      parameters:
+        - in: path
+          name: mongoId
+          schema:
+            type: string
+          required: true
+          description: MongoDB ObjectId
+      requestBody:
+        description: Possible fields to update
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              properties:
+                bookmark:
+                  type: string
+              example:
+                bookmark: 663b8a972c945917dd2d51af
+              items:
+                $ref: "#/components/schemas/User"
+      responses:
+        200:
+          description: Adds a bookmark if it is not already bookmarked, removes the bookmark if it is
+          content:
+            application/json:
+              examples:
+                added:
+                  value: Added bookmark
+                removed:
+                  value: Removed bookmark
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+  # Search
+  /search:
+    get:
+      description: Find one or more cards using search criteria
+      tags:
+        - Search
+      parameters:
+        - in: query
+          name: card-type
+          description: Type of card (assessment or mission)
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: card-category
+          description: Category of card (only applicable for assessment cards)
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: random
+          description: Defines the max number of matching cards to be returned (random={number})
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: exclude
+          description: Array of card_ids to be excluded (exclude=[{card1},{card2}...)
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: all
+          description: Flag to return all matching cards
+          required: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                example:
+                  cards:
+                    - card_id: 1
+                      card_type: assessment
+                      card_category: who is assessed
+                      card_name: Student
+                      card_description: A student is assessed individually
+                      card_details: The student will be assessed either on an independent work or on their contribution in a group assignment.
+                      card_icon: /public/icons/icon-assessed.png
+                    - card_id: 3
+                      card_type: assessment
+                      card_category: who is assessed
+                      card_name: Student group
+                      card_description: Three or more students work together on an assignment or project.
+                      card_details: Students can be grouped by own choice, by chance, or by teacher based on their skills and personal characteristics
+                      card_icon: /public/icons/icon-assessed.png
+                    - card_id: 10
+                      card_type: assessment
+                      card_category: the assessor
+                      card_name: Representative from public sector
+                      card_description: Whose field of expertise or project is relevant for the course.
+                      card_details: Can assess the students’ work with the work life appliance in mind. Can use criteria made by the teacher.
+                      card_icon: /public/icons/icon-assessor.png
+                    - card_id: 12
+                      card_type: assessment
+                      card_category: the assessor
+                      card_name: Student group
+                      card_description: Assess their own work or another group's work.
+                      card_details: The students get practice in how to evaluate other's work. Use clear assessment criteria made by the teacher.
+                      card_icon: /public/icons/icon-assessor.png
+                items:
+                  oneOf:
+                    - $ref: "#/components/schemas/AssessmentCard"
+                    - $ref: "#/components/schemas/MissionCard"
+        400:
+          description: Bad request
+  # Bulk
+  /bulk/add-assessment:
+    post:
+      tags:
+        - Bulk
+      description: Create multiple assessment cards
+      security:
+        - accessToken: []
+      requestBody:
+        description: Assessment card data
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/AssessmentCard"
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+  /bulk/add-mission:
+    post:
+      tags:
+        - Bulk
+      description: Create multiple mission cards
+      security:
+        - accessToken: []
+      requestBody:
+        description: Mission card data
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/MissionCard"
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+  /bulk/edit-assessment:
+    put:
+      tags:
+        - Bulk
+      description: Edit multiple assessment cards
+      security:
+        - accessToken: []
+      requestBody:
+        description: Cards to update, and card_icon to change to
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              example:
+                card_ids:
+                  - 1
+                  - 4
+                  - 6
+                  - 9
+                  - 14
+                  - 46
+                  - 67
+                  - 86
+                new_icon: /public/icons/icon-name
+              properties:
+                card_ids:
+                  type: array
+                new_icon:
+                  type: string
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+  /bulk/edit-mission:
+    put:
+      tags:
+        - Bulk
+      description: Edit multiple mission cards
+      security:
+        - accessToken: []
+      requestBody:
+        description: Cards to update, and card_icon to change to
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              example:
+                card_ids:
+                  - 1
+                  - 3
+                  - 5
+                  - 7
+                new_icon: https://i.imgflip.com/6ej3bl.png
+              properties:
+                card_ids:
+                  type: array
+                new_icon:
+                  type: string
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+  # Scheme
+  /scheme/public:
+    get:
+      tags:
+        - Scheme
+      description: Get a list of all the publicly available assessment schemes
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                example:
+                  schemes:
+                    - mission_cards:
+                        - 663a34c4dc1906af2e14757a
+                        - 663a34c4dc1906af2e14757b
+                        - 663a34c4dc1906af2e14757c
+                      assessment_cards:
+                        - 663a34c3dc1906af2e147524
+                        - 663a34c4dc1906af2e147528
+                        - 663a34c4dc1906af2e147535
+                        - 663a34c4dc1906af2e147554
+                        - 663a34c4dc1906af2e14756a
+                        - 663a34c4dc1906af2e147570
+                      creator: 663b87359901fcf75682507e
+                      ratings: []
+                      visibility: public
+                      avg_rating: 0
+                    - mission_cards:
+                        - 663a34c4dc1906af2e14757a
+                        - 663a34c4dc1906af2e14757b
+                        - 663a34c4dc1906af2e14757c
+                      assessment_cards:
+                        - 663a34c3dc1906af2e147524
+                        - 663a34c4dc1906af2e147528
+                        - 663a34c4dc1906af2e147535
+                        - 663a34c4dc1906af2e147554
+                        - 663a34c4dc1906af2e14756a
+                        - 663a34c4dc1906af2e147570
+                      creator: 663b87359901fcf75682507e
+                      ratings:
+                        - 4
+                        - 5
+                        - 3
+                        - 4
+                        - 4
+                        - 4
+                        - 3
+                        - 5
+                        - 5
+                        - 3
+                        - 2
+                        - 1
+                        - 1
+                        - 5
+                        - 5
+                        - 4
+                        - 3
+                        - 2
+                        - 3
+                        - 4
+                        - 5
+                        - 5
+                      visibility: "public"
+                      avg_rating: 3.5
+                items:
+                  $ref: "#/components/schemas/Scheme"
+        400:
+          description: Bad Request
+        404:
+          description: No schemes found
+  /scheme:
+    get:
+      tags:
+        - Scheme
+      description: Gets a list of the user's assessment schemes
+      security:
+        - accessToken: []
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                example:
+                  schemes:
+                    - mission_cards:
+                        - 663a34c4dc1906af2e14757a
+                        - 663a34c4dc1906af2e14757b
+                        - 663a34c4dc1906af2e14757c
+                      assessment_cards:
+                        - 663a34c3dc1906af2e147524
+                        - 663a34c4dc1906af2e147528
+                        - 663a34c4dc1906af2e147535
+                        - 663a34c4dc1906af2e147554
+                        - 663a34c4dc1906af2e14756a
+                        - 663a34c4dc1906af2e147570
+                      creator: 663b87359901fcf75682507e
+                      ratings: []
+                      visibility: public
+                      avg_rating: 0
+                    - mission_cards:
+                        - 663a34c4dc1906af2e14757a
+                        - 663a34c4dc1906af2e14757b
+                        - 663a34c4dc1906af2e14757c
+                      assessment_cards:
+                        - 663a34c3dc1906af2e147524
+                        - 663a34c4dc1906af2e147528
+                        - 663a34c4dc1906af2e147535
+                        - 663a34c4dc1906af2e147554
+                        - 663a34c4dc1906af2e14756a
+                        - 663a34c4dc1906af2e147570
+                      creator: 663b87359901fcf75682507e
+                      ratings:
+                        - 4
+                        - 5
+                        - 3
+                        - 4
+                        - 4
+                        - 4
+                        - 3
+                        - 5
+                        - 5
+                        - 3
+                        - 2
+                        - 1
+                        - 1
+                        - 5
+                        - 5
+                        - 4
+                        - 3
+                        - 2
+                        - 3
+                        - 4
+                        - 5
+                        - 5
+                      visibility: "public"
+                      avg_rating: 3.5
+                    - mission:cards:
+                        - 663a34c4dc1906af2e14757a
+                        - 663a34c4dc1906af2e14757b
+                        - 663a34c4dc1906af2e14757c
+                      assessment_cards:
+                        - 663a34c3dc1906af2e147524
+                        - 663a34c4dc1906af2e147528
+                        - 663a34c4dc1906af2e147535
+                        - 663a34c4dc1906af2e147554
+                        - 663a34c4dc1906af2e14756a
+                        - 663a34c4dc1906af2e147570
+                      creator: 663b87359901fcf75682507e
+                      ratings: []
+                      visibility: private
+                      avg_rating: 0
+                    - mission:cards:
+                        - 663a34c4dc1906af2e14757a
+                        - 663a34c4dc1906af2e14757b
+                        - 663a34c4dc1906af2e14757c
+                      assessment_cards:
+                        - 663a34c3dc1906af2e147524
+                        - 663a34c4dc1906af2e147528
+                        - 663a34c4dc1906af2e147535
+                        - 663a34c4dc1906af2e147554
+                        - 663a34c4dc1906af2e14756a
+                        - 663a34c4dc1906af2e147570
+                      creator: 663b87359901fcf75682507e
+                      ratings: []
+                      visibility: private
+                      avg_rating: 0
+                items:
+                  $ref: "#/components/schemas/Scheme"
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+        404:
+          description: No schemes found
+    post:
+      tags:
+        - Scheme
+      description: Create a new assessment scheme
+      security:
+        - accessToken: []
+      requestBody:
+        description: Assessment scheme data
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              properties:
+                mission_cards:
+                  type: array
+                  items:
+                    type: string
+                    format: objectId
+                assessment_cards:
+                  type: array
+                  items:
+                    type: string
+                    format: objectId
+                creator:
+                  type: string
+                  format: objectId
+                visibility:
+                  type: string
+              items:
+                $ref: "#/components/schemas/Scheme"
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+  /scheme/{_id}:
+    get:
+      tags:
+        - Scheme
+      description: Get one of the user's assessment schemes
+      security:
+        - accessToken: []
+      parameters:
+        - in: path
+          name: _id
+          schema:
+            type: string
+          required: true
+          description: ObjectId of the desired scheme
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                example:
+                  mission_cards:
+                    - 663a34c4dc1906af2e14757a
+                    - 663a34c4dc1906af2e14757b
+                    - 663a34c4dc1906af2e14757c
+                  assessment_cards:
+                    - 663a34c3dc1906af2e147524
+                    - 663a34c4dc1906af2e147528
+                    - 663a34c4dc1906af2e147535
+                    - 663a34c4dc1906af2e147554
+                    - 663a34c4dc1906af2e14756a
+                    - 663a34c4dc1906af2e147570
+                  creator: 663b87359901fcf75682507e
+                  ratings: []
+                  visibility: public
+                  avg_rating: 0
+                items:
+                  $ref: "#/components/schemas/Scheme"
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+    put:
+      tags:
+        - Scheme
+      description: Update an assessment scheme
+      security:
+        - accessToken: []
+      parameters:
+        - in: path
+          name: _id
+          schema:
+            type: string
+          required: true
+          description: ObjectId of the desired scheme
+      requestBody:
+        description: Possible fields to update
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              properties:
+                mission_cards:
+                  type: array
+                  items:
+                    type: string
+                    format: objectId
+                assessment_cards:
+                  type: array
+                  items:
+                    type: string
+                    format: objectId
+                visibility:
+                  type: string
+              example:
+                mission_cards:
+                  - 663a34c4dc1906af2e14757a
+                  - 663a34c4dc1906af2e14757b
+                  - 663a34c4dc1906af2e14757c
+                assessment_cards:
+                  - 663a34c3dc1906af2e147524
+                  - 663a34c4dc1906af2e147528
+                  - 663a34c4dc1906af2e147535
+                  - 663a34c4dc1906af2e147554
+                  - 663a34c4dc1906af2e14756a
+                  - 663a34c4dc1906af2e147570
+                visibility: public
+              items:
+                $ref: "#/components/schemas/Scheme"
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+        409:
+          description: Scheme has already been rated, and so cannot be edited.
+    delete:
+      tags:
+        - Scheme
+      description: Delete an assessment scheme
+      security:
+        - accessToken: []
+      parameters:
+        - in: path
+          name: _id
+          schema:
+            type: string
+          required: true
+          description: ObjectId of the desired scheme
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+  /scheme/rate/{_id}:
+    put:
+      tags:
+        - Scheme
+      description: Rate an assessment scheme
+      security:
+        - accessToken: []
+      parameters:
+        - in: path
+          name: _id
+          schema:
+            type: string
+          required: true
+          description: ObjectId of the desired scheme
+      requestBody:
+        description: New rating, from 0 to 5
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                rating:
+                  type: number
+                  example: 4
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+components:
+  schemas:
+    AssessmentCard:
+      type: object
+      properties:
+        card_id:
+          type: number
+          description: The unique card number displayed in the card's bottom right corner
+        card_type:
+          type: string
+          description: Which type of card it is - always assessment in this case
+        card_category:
+          type: string
+          enum:
+            - who is assessed
+            - the assessor
+            - assessment artefact
+            - assessment format
+            - context
+            - assessment timing
+          description: Which category the card is in
+        card_name:
+          type: string
+          description: The card's name
+        card_description:
+          type: string
+          description: The card's description
+        card_details:
+          type: string
+          description: Additional information about the card or its use
+        card_icon:
+          type: string
+          description: Path to the card's icon
+      required:
+        - card_id
+        - card_type
+        - card_category
+        - card_name
+        - card_description
+        - card_details
+        - card_icon
+    MissionCard:
+      type: object
+      properties:
+        card_id:
+          type: number
+          description: The unique card number displayed in the card's bottom right corner
+        card_type:
+          type: string
+          description: Which type of card it is - always mission in this case
+        card_name:
+          type: string
+          description: The card's name
+        card_description:
+          type: string
+          description: The card's description
+        card_icon:
+          type: string
+          description: Path to the card's icon
+      required:
+        - card_id
+        - card_type
+        - card_name
+        - card_description
+        - card_icon
+    User:
+      type: object
+      properties:
+        fName:
+          type: string
+          description: The user's first name
+        lName:
+          type: string
+          description: The user's last name
+        email:
+          type: string
+          description: The user's email, has to be unique
+        password:
+          type: string
+          description: The user's password, it is encrypted in the database
+        university:
+          type: string
+          description: Which university the student is associated with
+        department:
+          type: string
+          description: Which department the user is associated with
+        position:
+          type: string
+          enum:
+            - Student
+            - TA
+            - Teacher
+          description: Which position the user holds
+        role:
+          type: string
+          enum:
+            - User
+            - Administrator
+          default: User
+          description: Which role the user has
+        bookmarks:
+          type: array
+          description: An array of assessment schemes, referencing the ObjectIds of schemes in the Scheme model
+          items:
+            type: string
+            format: objectId
+      required:
+        - fName
+        - lName
+        - email
+        - password
+        - university
+        - department
+        - position
+        - role
+    Scheme:
+      type: object
+      properties:
+        mission_cards:
+          type: array
+          description: An array of mission cards, referencing the ObjectIds of cards in the Mission model, should contain 3 cards
+          items:
+            type: string
+            format: objectId
+        assessment_cards:
+          type: array
+          description: An array of assessment cards, referencing the ObjectIds of cards in the Assessment model, should contain 6 cards (on for each assessment category)
+          items:
+            type: string
+            format: objectId
+        creator:
+          type: string
+          format: objectId
+          description: A reference to the ObjectId of the user who created the scheme
+        ratings:
+          type: array
+          items:
+            type: number
+          description: An array of the ratings given to the scheme
+        visibility:
+          type: string
+          enum: ["private", "public"]
+          default: "private"
+          description: Whether the scheme is publicly shared or not
+        avg_rating:
+          type: number
+          default: 0
+          description: The average of all the scheme's ratings
+      required:
+        - mission_cards
+        - assessment_cards
+        - creator
+        - ratings
+        - visibility
+  securitySchemes:
+    accessToken:
+      type: apiKey
+      name: authorization
+      in: header
+    refreshToken:
+      type: apiKey
+      name: Cookie
+      in: cookie
+      description: Cookie containing a refresh token

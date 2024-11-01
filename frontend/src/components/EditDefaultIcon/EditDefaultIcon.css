@@ -1,0 +1,133 @@
+.editDefaultIconContainer{
+    padding: 2em;
+    background-color: whitesmoke;
+    width: 60vw;
+    height: 70vh;
+    position: relative;
+
+    && form{
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        justify-content: space-between;
+
+        && .field{
+            display: flex;
+            flex-direction: column;
+            margin: 0.5em 0;
+        }
+
+        && select{
+            padding: 0.5em;
+            margin: 0.5em 0;
+            border-radius: 5px;
+            border: 1px solid black;    
+            text-transform: capitalize;
+        }
+
+        && label{
+            font-weight: 300;
+        }
+
+        && .updateIcon{            
+            padding: 8px 16px;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            width: 100%;
+            margin: 0 auto;
+            text-align: center;
+            transition: 0.1s ease-in-out;
+             
+            &&:hover{
+                cursor: pointer;
+                scale: 1.01;
+            }
+        }
+
+        
+    }
+
+    && .close_card.versionTwo.editDefaultIcon{
+        transform: translate(0, -80px);
+        right: 0;
+    }
+
+    && .image-preview {
+        padding: 1.2em;
+        width: 100%;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        background-color: gainsboro;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+        height: 227px;
+
+        && img{
+            height: 170px;
+            width: 170px;
+            object-fit: contain;
+        }
+
+        && .items_container{
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            height: 100%;
+
+            && .items{
+                display: flex;
+                flex-direction: column;
+                justify-content: space-around;
+                height: 100%;
+
+                && span{
+                    font-weight: 200;
+                    margin-bottom: 10px;
+                
+                }
+            }
+        }
+
+        
+
+    }
+}
+
+.editDefaultIcon{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+
+.default-icons-link {
+    display: flex;
+    justify-content: flex-end;
+
+    && a{
+        padding: 4px 8px;
+        border-radius: 5px;
+        border:1px solid #0059ff;
+        color: #0059ff;
+        text-decoration: none;
+        transition: 0.1s ease-in-out;
+        font-size: 13px;
+        
+        &&:hover{
+            cursor: pointer;
+            scale: 1.01;
+        }
+    }
+}
+
+.default-icons-link.template{
+    margin-top: 10px;
+    && a{
+       background-color: white; 
+       border: 1px solid #0059ff;
+       color: #0059ff;
+    }
+}

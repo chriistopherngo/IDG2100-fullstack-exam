@@ -1,0 +1,42 @@
+.close_card.versionTwo.bulkUpload{
+    transform: translate(410px, -225px);
+}
+
+
+.bulk-up-container {
+    background-color: white;
+    position: absolute;
+    z-index: -1;
+    padding: 2em;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+
+    && form{
+        margin-top: 2em;
+        display: flex;
+        flex-direction: column;
+        gap: 2em;
+    }
+
+    && button{
+        appearance: button;
+        background-color: #1652F0;
+        border: 1px solid #1652F0;
+        border-radius: 4px;
+        box-sizing: border-box;
+        color: #FFFFFF;
+        cursor: pointer;
+        font-family: Graphik,-apple-system,system-ui,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",sans-serif;
+        font-size: 14px;
+        line-height: 1.15;
+        overflow: visible;
+        padding: 12px 16px;
+        position: relative;
+        text-align: center;
+        text-transform: none;
+        transition: all 80ms ease-in-out;
+
+    }
+}

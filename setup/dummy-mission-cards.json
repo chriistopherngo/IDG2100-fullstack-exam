@@ -1,0 +1,49 @@
+[{
+  "card_id": 1,
+  "card_type": "mission",
+  "card_name": "Innovation",
+  "card_description": "Your mission is To find and support new and innovative ways of assessing students.",
+  "card_icon": "uploads/icon-mission-1.png"
+},
+{
+  "card_id": 2,
+  "card_type": "mission",
+  "card_name": "Time management",
+  "card_description": "Your mission is To reduce time used on assessment (not necessarily thinking about costs)",
+  "card_icon": "uploads/icon-mission-2.png"
+},
+{
+  "card_id": 3,
+  "card_type": "mission",
+  "card_name": "Learning",
+  "card_description": "Your mission is To focus on the students learning outcomes.",
+  "card_icon": "uploads/icon-mission-3.png"
+},
+{
+  "card_id": 4,
+  "card_type": "mission",
+  "card_name": "Student engagement",
+  "card_description": "Your mission is To prioritize and support ideas and ways that facilitate student engagement.\n\n\n\n",
+  "card_icon": "uploads/icon-mission-4.png"
+},
+{
+  "card_id": 5,
+  "card_type": "mission",
+  "card_name": "Authenticity",
+  "card_description": "Your mission is To create an authentic and realistic work-life assessment.",
+  "card_icon": "uploads/icon-mission-5.png"
+},
+{
+  "card_id": 6,
+  "card_type": "mission",
+  "card_name": "Cost cutting",
+  "card_description": "Your mission is To save resources and reduce financial expenses.",
+  "card_icon": "uploads/icon-mission-6.png"
+},
+{
+  "card_id": 7,
+  "card_type": "mission",
+  "card_name": "Counteract cheating",
+  "card_description": "Your mission is To design assessment that is resistant to cheating in the assessment process.",
+  "card_icon": "uploads/icon-mission-7.png"
+}]

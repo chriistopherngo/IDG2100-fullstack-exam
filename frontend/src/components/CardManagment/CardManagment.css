@@ -1,0 +1,230 @@
+.manage_cards_container_outer {
+  margin: 0 2%;
+}
+
+.manage_cards_container {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 250px);
+  grid-gap: 1.2rem;
+  justify-content: center;
+  align-content: flex-start;
+  margin: 30px auto;
+}
+
+.manage_cards_container .add-new-card-container,
+.manage_cards_card {
+  position: relative;
+  transition: 0.1s ease-in-out;
+  border-radius: 10px;
+  /* background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  padding: 2%; */
+}
+
+.manage_cards_container .add-new-card-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 5px solid #aed5ff;
+  color: #007bff;
+  font-weight: 200;
+}
+
+.manage_cards_container .add-new-card-container .add-new-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.manage_cards_container .add-new-card-container .add-new-card > div {
+  font-size: 50px;
+}
+
+.manage_cards_card .card_hero {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  /* border-bottom: 0.5px solid gray; */
+}
+.selection-mode-btn {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.selection-mode-btn.withReset {
+  align-items: center;  
+}
+/* *{outline: 1px solid red;} */
+
+.selection-mode-btn.withReset .reset-all-container {
+  display: flex;
+  gap: 2px;
+  /* outline: 1px solid red; */
+
+}
+
+.selection-mode-btn.withReset .reset-all {
+  display: flex;
+  align-items: center;
+  color: red;
+}
+
+.selection-mode-btn button {
+  padding: 8px 16px;
+  background-color: white;
+  color: rgb(60, 60, 60);
+  border: #007bff 1px solid;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.selection-mode-btn.filter button {
+  border: #8c00ff 1px solid;
+}
+.selection-mode-btn.filter button.active {
+  background-color: #8c00ff;
+}
+
+.selection-mode-btn button.active {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.select-all-btn {
+  padding: 8px 16px;
+  background-color: white;
+  color: rgb(60, 60, 60);
+  border: #007bff 1px solid;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.manage_cards_card .card_hero .selection-mode {
+  position: absolute;
+  right: 8px;
+  top: 14px;
+  margin: 5px 5px 0 0;
+  z-index: 11 !important;
+}
+
+.manage_cards_card .card_hero .selection-mode .selection-noncheck {
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  background: transparent;
+  border: 1.5px solid rgb(255, 255, 255);
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+}
+
+.manage_cards_card .card_hero .selection-mode.selected .selection-noncheck {
+  background-color: #007bff;
+  /* border: 0.5px solid rgb(255, 255, 255); */
+}
+
+.manage_cards_card .card_hero .selection-mode .selection-check {
+  display: none;
+}
+
+.manage_cards_card .card_hero .selection-mode .selection-check.selected {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+.manage_cards_card .card_hero .user_pic {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
+
+.manage_cards_card .card_type-card_name {
+  display: flex;
+  gap: 5px;
+}
+
+.manage_cards_card .card_type-card_name .card_type {
+  font-size: 10pt;
+}
+.manage_cards_card .triple_trouble {
+  display: flex;
+  flex-direction: column;
+}
+
+.manage_cards_card .triple_trouble .double_trouble {
+  display: flex;
+  gap: 5px;
+  font-weight: 200;
+  font-size: 10pt;
+}
+
+.manage_cards_card .card_description,
+.manage_cards_card .card_details {
+  font-weight: 200;
+  max-width: 95%;
+  font-size: 10pt;
+}
+
+/* .manage_cards_card .card_data {
+  /* padding: 8px 5px; */
+/* }  */
+
+.manage_cards_card .card_id_container {
+  width: 95%;
+  padding: 0 0 5% 0;
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  justify-content: flex-end;
+  /* outline: 1px solid red;s */
+}
+
+.manage_cards_card .card_id_container .card_id {
+  font-size: 9pt;
+  font-weight: 200;
+}
+
+.manage_cards_card:hover,
+.manage_cards_container .add-new-card-container:hover {
+  transform: scale(1.02);
+  cursor: pointer;
+}
+
+.manage_cards_card .card_data .heading {
+  color: rgb(73, 73, 73);
+  font-size: 10pt;
+  font-weight: 600;
+}
+
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 232px;
+}
+
+.selected-items-container .selected-items {
+  position: absolute;
+  right: 0;
+  width: 300px;
+  height: 100%;
+  z-index: 100;
+  background-color: red;
+}
+/* *{outline:1px solid red} */
+
+.document-bulk img {
+  width: 30px;
+  fill: white;
+}
+
+.document-bulk img svg path{
+  fill: white;
+}

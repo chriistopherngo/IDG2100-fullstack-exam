@@ -1,0 +1,44 @@
+{
+  "cards": [
+    {
+      "card-id": 101,
+      "card-type": "assessment",
+      "card-category": "Who is assessed",
+      "card-name": "Student",
+      "card-description": "A student is assessed individually",
+      "card-details": "The student will be assessed either on an independent work or on their contribution in a group assignment."
+    },
+    {
+      "card-id": 102,
+      "card-type": "assessment",
+      "card-category": "Who is assessed",
+      "card-name": "Student pair",
+      "card-description": "Two students work together on an assignment or task.",
+      "card-details": "Students can be grouped by own choice, by chance, or by teacher based on their skills and personal characteristics"
+    },
+    {
+      "card-id": 103,
+      "card-type": "assessment",
+      "card-category": "Who is assessed",
+      "card-name": "Student group",
+      "card-description": "Three or more students work together on an assignment or project.",
+      "card-details": "Students can be grouped by own choice, by chance, or by teacher based on their skills and personal characteristics"
+    },
+    {
+      "card-id": 104,
+      "card-type": "assessment",
+      "card-category": "Who is assessed",
+      "card-name": "Student group from different study programme/Inter-disciplinary student group",
+      "card-description": "Student group from different discipline, programme, put together in a group.",
+      "card-details": "Three or more student from different disciplines, put together in a group."
+    },
+    {
+      "card-id": 105,
+      "card-type": "assessment",
+      "card-category": "The assessor",
+      "card-name": "Teacher",
+      "card-description": "Assess the work of a student or student group",
+      "card-details": "Has good knowledge about the course curriculum and learning outcomes."
+    }
+  ]
+}

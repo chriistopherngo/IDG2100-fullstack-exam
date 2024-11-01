@@ -1,0 +1,19 @@
+{
+    "cards": [
+      {
+        "card-id": , // number in the bottom right corner of the card
+        "card-type": "Mission", // should not be changed
+        "card-name": "",
+        "card-description": ""
+      },
+      {
+        "card-id": ,
+        "card-type": "Mission",
+        "card-name": "",
+        "card-description": ""
+      }
+      ... // replace ellipsis with however many new cards you want, each card is separated by a comma
+
+      // comments (// followed by text) have to be removed after filling in the cards
+    ]
+  }

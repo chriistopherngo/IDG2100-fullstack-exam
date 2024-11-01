@@ -1,0 +1,34 @@
+{
+  "cards": [
+    {
+      "card-id": 101,
+      "card-type": "Mission",
+      "card-name": "Innovation",
+      "card-description": "Your mission is to find and support new and innovative ways of assessing students."
+    },
+    {
+      "card-id": 102,
+      "card-type": "Mission",
+      "card-name": "Time management",
+      "card-description": "Your mission is to reduce time used on assessment (not necessarily thinking about costs)."
+    },
+    {
+      "card-id": 103,
+      "card-type": "Mission",
+      "card-name": "Learning",
+      "card-description": "Your mission is to focus on the students' learning outcomes."
+    },
+    {
+      "card-id": 104,
+      "card-type": "Mission",
+      "card-name": "Student engagement",
+      "card-description": "Your mission is to prioritize and support ideas and ways that facilitate student engagement."
+    },
+    {
+      "card-id": 105,
+      "card-type": "Mission",
+      "card-name": "Authenticity",
+      "card-description": "Your mission is to create an authentic and realistic work-life assessment."
+    }
+  ]
+}

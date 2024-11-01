@@ -1,0 +1,23 @@
+.modal.confirmation {
+  z-index: 900000000;
+}
+
+.confirmation_modal.versionTwo {
+  border-radius: 2px;
+  border-top: 5px solid red;
+}
+
+.confirmation_modal.versionTwo .confirmation_options_container button.delete{
+    background-color: #f01616;
+    border: 1px solid #f01616;
+  }
+  
+  .confirmation_modal.versionTwo .confirmation_options_container button.cancel{
+    background-color: #ffffff;
+      border: 1px solid #8dacfb;
+      color: #727272;
+  }
+  
+  .confirmation_modal.versionTwo .confirmation_options_container button:hover{
+    scale: 1.035;
+  }

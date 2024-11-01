@@ -1,0 +1,45 @@
+.table_or_card{
+    display: flex;
+    justify-content: space-between;
+    width: 96%;
+    height: 45px;
+    margin: 2% auto;
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+    /* outline: 0.5px solid black; */
+    color: black;
+}
+
+.table_or_card div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    cursor: pointer;
+}
+
+/* .table_or_card div:hover{
+    border-bottom: #000000 3.5px solid;
+} */
+
+.toggle_button{
+    font-weight: 600;
+}
+
+.toggle_button:hover{
+    /* border-bottom: 5px solid #007bff; */
+    background-color: whitesmoke;
+}
+
+div.selected_button{
+    border-bottom: 5px solid #007bff;
+    cursor:auto;
+    font-weight: 600;
+    background-color: whitesmoke;
+}
+
+@media screen and (max-width: 1111px) {
+    .table_or_card{
+        width: 100%;
+    }
+  }
+  
